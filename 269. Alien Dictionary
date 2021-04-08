@@ -1,0 +1,69 @@
+from collections import defaultdict
+class Solution:
+    
+    def dfs(self, node, graph, visited, recursivestack, result):
+        visited[node] =True;
+        recursivestack[node] = True;
+        
+        for neighbor in graph[node]:
+            if(not visited[neighbor]):
+                if(self.dfs(neighbor, graph, visited, recursivestack, result)):
+                    return True;
+            elif(recursivestack[neighbor]):
+                return True;
+        result.append(node);
+        recursivestack[node] = False;
+        return False;
+    
+    def buildgraph(self, words):
+        letters = set(''.join(words));
+        graph = defaultdict(set);
+        for char in letters:
+            graph[char] = set();
+            
+        for i in range(len(words) - 1):
+            word1 = words[i];
+            word2 = words[i+1];
+            l1, l2 = len(word1), len(word2);
+            if(l1 > l2):
+                if( word1.startswith(word2) ):
+                    return '';
+            minlen = min(l1, l2);
+            for j in range(minlen):
+                if(word1[j] != word2[j]):
+                    graph[word1[j]].add(word2[j]);
+                    break;
+        return graph
+            
+    
+    def alienOrder(self, words: List[str]) -> str:
+        graph = self.buildgraph(words);
+        if(not graph):
+            return '';
+        
+        letters = set(''.join(words));
+        
+        visited = {}
+        recursivestack = {};
+        result = []
+        
+        for char in letters:
+            visited[char] = False;
+            recursivestack[char] = False;
+        
+        for node in graph:
+            if(not visited[node]):
+                cyclestatus = self.dfs(node, graph, visited, recursivestack, result);
+                if(cyclestatus):
+                    return '';
+        return ''.join(result[::-1]);
+        '''
+        n = sum of the lengths of all the letters
+        time complexity = O(n)
+        space complexity = O(n)
+        '''
+        
+        
+        
+        
+        
