@@ -1,27 +1,27 @@
 class Solution:
     def isAlienSorted(self, words: List[str], order: str) -> bool:
-        #Approach: Compare adjacent numbers
+        #Approach: Comparing adjacent words
         #Time Complexity: O(n * l)
         #Space Complexity: O(1)
         #where, n is the number of words, and l is the length of an average word
         
-        orderMap = {}
+        self.orderMap = {}
         for i in range(len(order)):
-            orderMap[order[i]] = i
+            self.orderMap[order[i]] = i
             
         for i in range(len(words) - 1):
             word1 = words[i]
             word2 = words[i + 1]
             
-            j = 0
-            while j < min(len(word1), len(word2)):
-                if orderMap[word1[j]] < orderMap[word2[j]]:
-                    break
-                if orderMap[word1[j]] > orderMap[word2[j]]:
-                    return False
-                j += 1
-                
-            if len(word2) == j and len(word1) > j:
+            if self.isNotSorted(word1, word2):
                 return False
-                
         return True
+    
+    def isNotSorted(self, word1, word2):
+        i = 0
+        while i < len(word1) and i < len(word2):
+            if word1[i] != word2[i]:
+                return self.orderMap[word1[i]] > self.orderMap[word2[i]]
+            i += 1
+        
+        return len(word1) > len(word2)
