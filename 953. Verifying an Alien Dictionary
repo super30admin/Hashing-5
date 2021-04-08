@@ -1,0 +1,29 @@
+class Solution:
+    def isAlienSorted(self, words: List[str], order: str) -> bool:
+        dict1 = {}
+        for i in range(len(order)):
+            dict1[order[i]] = i;
+        
+        for i in range(len(words)-1):
+            word1, word2 = words[i], words[i+1];
+            l = min(len(word1), len(word2));
+            count = 0;
+            #print(word1, word2)
+            for i in range(l):
+                if(word1[i] != word2[i]):
+                    if(dict1[word1[i]] > dict1[word2[i]]):
+                        return False;
+                    else:
+                        break;
+                count += 1;
+            if(count == l and len(word1) > len(word2)):
+                return False
+                
+        return True;
+    '''
+    n = sum of the lengths of all the words
+    time complexity = O(n)
+    space complexity = O(1)
+    '''
+                        
+        
