@@ -1,4 +1,3 @@
-import java.util.HashMap;
 
 //Time Complexity: O(n.k); where n is number of words and k is avg length of a word.
 //Space Complexity: O(1) as map will at most have 26 chars
