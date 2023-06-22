@@ -1,0 +1,82 @@
+//SC: O(1) 
+//TC: O(nk) n-- number of words in words arr and k = avg length of each word
+class Solution {
+    HashMap<Character, Set<Character>> map;
+    int[] indegrees;
+    public String alienOrder(String[] words) {
+        if(words == null || words.length == 0) return "";
+        map = new HashMap<>();
+        indegrees = new int[26];
+        buildGraph(words);
+        
+        //bfs
+        Queue<Character> q = new LinkedList<>();
+        StringBuilder result = new StringBuilder();
+
+        // for(int i=0;i<indegrees.length;i++){
+        //     int startCharacter = indegrees[i] == 0 && map.containsKey(indegrees[i]);
+        //     break;
+        // } Cant do this bcz other characters will have indegreees xero eg. a == 0 , same b , c characters which are not there in given words
+        
+        for(Character key: map.keySet()){
+            if(indegrees[key - 'a'] == 0){
+                q.add(key);
+            }
+        }
+        if(q.isEmpty()) return "";
+
+        while(!q.isEmpty()){
+            char curr = q.poll();
+            result.append(curr);
+            //reduce indegrees of babies
+            Set<Character> set = map.get(curr);
+            if(set != null){
+                for(char edge: set){
+                    indegrees[edge - 'a']--;
+                    if(indegrees[edge - 'a'] == 0){
+                        q.add(edge);
+                    }
+                }
+            }
+             
+        }      
+        if(result.length() != map.size())  return "";
+        return result.toString();  
+    }   
+    private void buildGraph(String[] words){
+        for(String word: words){
+             for(int i=0;i< word.length();i++){
+                 char c = word.charAt(i);
+                 if(!map.containsKey(c)){
+                     map.put(c, new HashSet<>());
+                 }
+             }
+        }
+        for(int i=0;i<words.length-1;i++){
+            String firstWord = words[i];
+            String secondWord = words[i+1];
+            
+            int fl = firstWord.length();
+            int sl = secondWord.length();
+            
+            if(fl != sl && firstWord.startsWith(secondWord)){ //"abc" "ab" case
+                map = new HashMap<>();
+                break;
+            }
+            
+            for(int j=0;j<fl && j<sl; j++){
+                char fChar = firstWord.charAt(j);
+                char sChar = secondWord.charAt(j);
+                
+                if(fChar != sChar){ //wrt wrf ==> t != f ==> t > f
+                    Set<Character> set = map.get(fChar);
+                    if(!set.contains(sChar)){
+                        set.add(sChar);
+                        indegrees[sChar - 'a']++;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+}
