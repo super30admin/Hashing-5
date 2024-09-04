@@ -1,0 +1,29 @@
+T.c --> O(nk) --> where n is the number of words and k is avg length of the word. 
+S.c --> O(1) --> the characters space is constant
+class Solution {
+    HashMap<Character, Integer> map ;
+    public boolean isAlienSorted(String[] words, String order) {
+      map = new HashMap<>();       
+      for(int i =0; i<order.length(); i++){
+        map.put(order.charAt(i),i);
+      }
+      for(int i =0; i<words.length-1; i++){
+        String first = words[i];
+        String second = words[i+1];
+        if(isNotSorted(first,second)){
+            return false;
+        }
+      }
+      return true;
+    }
+    private boolean isNotSorted(String first , String second){
+       int m = first.length();
+       int n = second.length();
+       for(int i =0; i<m && i<n; i++){
+          if(first.charAt(i) != second.charAt(i)){
+             return map.get(first.charAt(i)) > map.get(second.charAt(i));
+          }
+       }
+       return m>n;
+    }
+}

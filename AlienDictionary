@@ -1,0 +1,65 @@
+T.c --> O(nk)
+S.c --> O(nk)
+
+class Solution {
+    int[] inorder;
+    HashMap<Character, List<Character>> map;
+
+    public String alienOrder(String[] words) {
+        inorder = new int[26];
+        map = new HashMap<>();
+        build(words);
+        Queue<Character> q = new LinkedList<>();
+        for(Character key: map.keySet()){
+            if(inorder[key-'a'] == 0){
+                q.add(key);
+            }
+        }
+        StringBuilder sb = new StringBuilder(); 
+        while(!q.isEmpty()){
+           char curr = q.poll();
+           sb.append(curr);
+           List<Character> allchars = map.get(curr);
+           if(allchars == null){
+             continue;
+           }
+           for(char ch : allchars){
+              inorder[ch-'a']--;
+              if(inorder[ch-'a'] == 0){
+               q.add(ch); 
+              } 
+           }         
+        }
+        if(sb.length() != map.size()){
+             return "";
+        }
+        return sb.toString();
+    }
+    private void build(String[] words){
+        for(int i =0; i<words.length; i++){
+            String word = words[i];
+            for(int j =0; j<word.length(); j++){
+                if(!map.containsKey(word.charAt(j))){
+                    map.put(word.charAt(j),new ArrayList<>());
+                }
+            }
+        }
+        for(int i =0; i<words.length-1; i++){
+           String first = words[i];
+           String second = words[i+1];
+           int m = first.length();
+           int n = second.length();
+           if(first.startsWith(second) && m != n){
+              map.clear();
+              break;
+           }
+           for(int j = 0; j<m && j<n ; j++){
+               if(first.charAt(j) != second.charAt(j)){
+                   map.get(first.charAt(j)).add(second.charAt(j));
+                   inorder[second.charAt(j)-'a']++;
+                   break;
+               }
+           }
+        }
+    }
+}
