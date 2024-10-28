@@ -1,0 +1,40 @@
+public class VerifyAlienDictionary {
+
+ 
+    public boolean isAlienSorted(String[] words, String order) {
+        // hash the dictionary
+        Map<Character, Integer> dictionary = new HashMap<>();
+        for (int i = 0; i < order.length(); i++) {
+            dictionary.put(order.charAt(i), i);
+        }
+
+        for (int i = 0; i < words.length - 1; i++) {
+            String word1 = words[i];
+            String word2 = words[i + 1];
+            int ptr = 0;
+            boolean diff = false;
+            // pick the min. length for comparison
+            int len = Math.min(word1.length(), word2.length());
+            while (ptr < len) {
+                char ch1 = word1.charAt(ptr);
+                char ch2 = word2.charAt(ptr);
+                if (ch1 != ch2) {
+                    diff = true;
+                    if (dictionary.get(ch1) > dictionary.get(ch2)) {
+                       
+                        return false;
+                    }
+                    break;
+                }
+                ptr++;
+            }
+            
+            if (!diff && word1.length() > word2.length()) {
+                
+                return false;
+            }
+        }
+        
+        return true;
+    }
+}
