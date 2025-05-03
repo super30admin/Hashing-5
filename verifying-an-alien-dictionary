@@ -1,0 +1,34 @@
+// Time Complexity :O(N*l)
+// Space Complexity :O(1)
+// Did this code successfully run on Leetcode :yes
+// Any problem you faced while coding this :no
+// Your code here along with comments explaining your approach:Two pointers
+
+
+class Solution {
+    public boolean isAlienSorted(String[] words, String order) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < order.length(); i++) {//index of each char a torder for O(1)
+            map.put(order.charAt(i), i);
+        }
+        for (int i = 1; i < words.length; i++) {
+            String first = words[i - 1];
+            String second = words[i];
+            if (notOrder(first, second, map)) {//checking whether string or in order or not
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean notOrder(String first, String second, HashMap<Character, Integer> map) {
+        for (int i = 0; i < first.length() && i < second.length(); i++) {
+            char fChar = first.charAt(i);
+            char sChar = second.charAt(i);
+            if (fChar != sChar) {//where not mtaching char occures checikng whether theri first index is greater than or not if not just false
+                return map.get(fChar) > map.get(sChar);
+            }
+        }
+        return first.length() > second.length();//no diff char identified(one string and other length can be diff) if one string length is greater then second than shortest string should be first
+    }
+}
